@@ -1,0 +1,13 @@
+#spring:
+#  cloud:
+#      config:
+#         uri: ${cloud.uri:http://120.78.67.51:9001}
+
+mytask:
+  log:
+    path: D:/workspace-idea/gitlib/mytask/logfile
+      
+#spring:
+#  cloud :
+#   config:
+#     profile:dev
