@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.google.common.collect.Maps;
+import com.qjxs.common.login.LoginSign;
 import com.qjxs.common.utils.AuthServiceUtils;
 import com.qjxs.utils.KSessionUtil;
 import com.qjxs.common.utils.ReqUtil;
@@ -90,7 +91,7 @@ public class AuthorizationFilter implements Filter {
 		// 如果访问的是控制台或资源目录
 		if (requestUri.startsWith("/console") || requestUri.endsWith(".js") || requestUri.endsWith(".html")
 				|| requestUri.endsWith(".css") || requestUri.endsWith(".png")) {
-			Object obj = request.getSession().getAttribute("LOGIN_USER");
+			Object obj = request.getSession().getAttribute(LoginSign.LOGIN_USER_KEY);
 			// 用户已登录或访问资源目录或访问登录页面
 			if (null != obj || requestUri.startsWith("/pages") || requestUri.startsWith("/console/login")
 					|| requestUri.startsWith("/console")) {
@@ -110,14 +111,14 @@ public class AuthorizationFilter implements Filter {
 				if (StringUtils.isEmpty(accessToken)) {
 					logger.info("不包含请求令牌");
 					int tipsKey = 1030101;
-					renderByErrorKey(response, tipsKey,"不包含请求令牌");
+					renderByErrorKey(response, tipsKey, "不包含请求令牌");
 				} else {
 					String userId = getUserId(accessToken);
 					// 请求令牌是否有效
 					if (null == userId) {
 						logger.info("请求令牌无效或已过期...");
 						int tipsKey = 1030102;
-						renderByErrorKey(response, tipsKey,"请求令牌无效或已过期...");
+						renderByErrorKey(response, tipsKey, "请求令牌无效或已过期...");
 					} else {
 
 						if (!AuthServiceUtils.authRequestApi(userId, time, accessToken, secret, requestUri)) {
@@ -125,7 +126,7 @@ public class AuthorizationFilter implements Filter {
 							return;
 						}
 
-						 ReqUtil.setLoginedUserId(Integer.parseInt(userId));
+						ReqUtil.setLoginedUserId(Integer.parseInt(userId));
 						arg2.doFilter(arg0, arg1);
 						return;
 					}
@@ -134,14 +135,10 @@ public class AuthorizationFilter implements Filter {
 				/**
 				 * 校验没有登陆的接口
 				 */
-				if (null == accessToken) {
-					if (!AuthServiceUtils.authOpenApiSecret(time, secret)) {
-						renderByError(response, "授权认证失败");
-						return;
-					}
-
+				if (!AuthServiceUtils.authOpenApiSecret(time, secret)) {
+					renderByError(response, "授权认证失败");
+					return;
 				}
-			
 				arg2.doFilter(arg0, arg1);
 			}
 		}
@@ -155,7 +152,7 @@ public class AuthorizationFilter implements Filter {
 		String userId = null;
 
 		try {
-			 userId = KSessionUtil.getUserIdBytoken(_AccessToken);
+			userId = KSessionUtil.getUserIdBytoken(_AccessToken);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -165,20 +162,18 @@ public class AuthorizationFilter implements Filter {
 
 	private static final String template = "{\"resultCode\":%1$s,\"resultMsg\":\"%2$s\"}";
 
-	private static void renderByErrorKey(ServletResponse response, int tipsKey,String tipsValue) {
-//		 String tipsValue = ConstantUtil.getMsgByCode(tipsKey+"",
-//		 "zh").getValue();
-//		String tipsValue ="";
-		 String s = String.format(template, tipsKey, tipsValue);
-		
-		 ResponseUtil.output(response, s);
+	private static void renderByErrorKey(ServletResponse response, int tipsKey, String tipsValue) {
+
+		String s = String.format(template, tipsKey, tipsValue);
+
+		ResponseUtil.output(response, s);
 	}
 
 	private static void renderByError(ServletResponse response, String errMsg) {
 
 		String s = String.format(template, 0, errMsg);
 
-		 ResponseUtil.output(response, s);
+		ResponseUtil.output(response, s);
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 public enum ResultCode {
 	/* 成功状态码 */
     SUCCESS(1, "成功"),
-    ERROR(-1, "失败"),
+    ERROR(0, "失败"),
     
     /* 参数错误：10001-19999 */
     PARAM_IS_INVALID(10001, "参数无效"),

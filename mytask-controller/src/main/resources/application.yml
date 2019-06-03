@@ -38,6 +38,7 @@ authorizationfilter:
 myTask:
   apiKey: task0408 
   isAuth: 0 #是否检验接口 0不检验，1检验
+  isSaveRequestLogs: 0 #是否保存请求日志 0否，1是
         
      
         
