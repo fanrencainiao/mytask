@@ -7,9 +7,7 @@
 		<groupId>com.qjxs</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>com.qjxs</groupId>
 	<artifactId>mytask-domain</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<properties>
 		<java.version>1.8</java.version>
@@ -58,6 +56,12 @@
 
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<scope>provided</scope>
+			</dependency>
 	</dependencies>
 	<build>
 		<plugins>
