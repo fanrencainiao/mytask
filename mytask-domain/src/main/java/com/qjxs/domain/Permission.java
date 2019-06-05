@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -23,7 +24,14 @@ public class Permission {
 	private String icon;
 	private Integer lev;
 	private Integer state;
+	/**
+	 * 类型   0：目录   1：菜单   2：按钮
+	 */
+	private Integer type;
 	@Transient
 	private List<Permission> pers;
+	
+	@ManyToMany(mappedBy="permissions")
+	private List<Role> roles;
 
 }

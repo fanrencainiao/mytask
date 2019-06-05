@@ -26,7 +26,7 @@ public class UserController extends AbstractController{
 //    	userService.save(user);
     	User u=new User();
     	u.setId("4028ab4e6aa77cbc016aa792cad00000");
-    	u.setUsername("123");
+    	u.setUserName("123");
     	userService.save(u);
         return u;
     }

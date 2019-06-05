@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
 
 	private Predicate getPredicate(UserQry qry) {
 		BooleanBuilder p = new BooleanBuilder();
-		if (qry.getUsername() != null)
-			p.and(QUser.user.username.eq(qry.getUsername()));
+		if (qry.getUserName() != null)
+			p.and(QUser.user.userName.eq(qry.getUserName()));
 
 		return p;
 	}

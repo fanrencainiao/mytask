@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -31,5 +32,14 @@ public class User {
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)    
 	@JoinTable(name = "T_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))   
 	private List<Role> roles;
+	
+	public List<String> getRoleName() {
+		List<Role> roles = getRoles();
+		List<String> roleName = new ArrayList<String>();
+		for (Role role : roles)
+			roleName.add(role.getRoleName());
+
+		return roleName;
+	}
 
 }
