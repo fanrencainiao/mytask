@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -16,8 +18,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
@@ -29,6 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.google.common.collect.Maps;
+import com.qjxs.advice.ExceptionHandlerAdvice;
 import com.qjxs.common.ex.ServiceException;
 import com.qjxs.common.utils.DateUtil;
 import com.qjxs.common.utils.ReqUtil;
@@ -39,10 +40,9 @@ import com.qjxs.common.vo.SysApiLog;
 @Order(1)
 @Component
 public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
-
-	private Logger logger = LoggerFactory.getLogger(SysApiLogAspect.class);
+	private Log log=LogFactory.getLog(SysApiLogAspect.class);
 	
-	@Value("myTask.isSaveRequestLogs")
+	@Value("${myTask.isSaveRequestLogs}")
 	int isSaveRequestLogs;
 
 	/**
@@ -67,7 +67,7 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 					break;
 			}
 		} catch (Exception e) {
-			logger.error(e.toString(), e);
+			log.error(e.toString(), e);
 		} finally {
 // 			if(!list.isEmpty())
 //			 SKBeanUtils.getDatastore().save(list);
@@ -95,13 +95,13 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 
 		// 记录下请求内容
 
-		logger.info("HTTP_METHOD : " + request.getMethod());
+		log.info("HTTP_METHOD : " + request.getMethod());
 
-		logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
+		log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "."
 
 				+ joinPoint.getSignature().getName());
 
-		logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+		log.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
 
 		MDC.get("uri");
 
@@ -114,7 +114,7 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 
 		// 处理完请求，返回内容
 
-		// logger.info("RESPONSE : " + ret);
+		// log.info("RESPONSE : " + ret);
 	}
 
 	@Around("apiLogAspect()")
@@ -138,7 +138,7 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 		// String reqParamArr = Arrays.toString(joinPoint.getArgs());
 
 		// 记录请求
-		// logger.info(String.format("【%s】类的【%s】方法，请求参数：%s", className, methodName,
+		// log.info(String.format("【%s】类的【%s】方法，请求参数：%s", className, methodName,
 		// reqParamArr));
 		StringBuffer fullUri = new StringBuffer();
 		fullUri.append(request.getRequestURI());
@@ -156,9 +156,9 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 		apiLog.setFullUri(fullUri.toString());
 		apiLog.setUserAgent(request.getHeader("User-Agent"));
 
-		logger.info(String.format("请求参数： %s", apiLog.getFullUri()));
-		logger.info(String.format("客户端ip [%s]  User-Agent %s ", apiLog.getClientIp(), apiLog.getUserAgent()));
-		logger.info(String.format("【%s】类的【%s】方法", className, methodName));
+		log.info(String.format("请求参数： %s", apiLog.getFullUri()));
+		log.info(String.format("客户端ip [%s]  User-Agent %s ", apiLog.getClientIp(), apiLog.getUserAgent()));
+		log.info(String.format("【%s】类的【%s】方法", className, methodName));
 		// 用于统计调用耗时
 		long startTime = System.currentTimeMillis();
 
@@ -173,25 +173,25 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 		long totalTime = System.currentTimeMillis() - startTime;
 		apiLog.setTotalTime(totalTime);
 		// 记录应答
-		// logger.info(String.format("【%s】类的【%s】方法，应答参数：%s", className, methodName,
+		// log.info(String.format("【%s】类的【%s】方法，应答参数：%s", className, methodName,
 		// response));
-		// logger.info("RESPONSE : " + response);
+		// log.info("RESPONSE : " + response);
 
 		// 获取执行完的时间
-		logger.info(String.format("接口【%s】总耗时(毫秒)：%s", methodName, totalTime));
+		log.info(String.format("接口【%s】总耗时(毫秒)：%s", methodName, totalTime));
 
-		logger.info("********************************************   ");
+		log.info("********************************************   ");
 		/**
 		 * 代码异常了
 		 */
 		if (null != exception) {
 			stackTrace = ExceptionUtils.getStackTrace(exception);
 			apiLog.setStackTrace(stackTrace);
-			if (1 == isSaveRequestLogs)
+			if (1 == Integer.valueOf(isSaveRequestLogs))
 				saveSysApiLogToDB(apiLog);
 			return handleErrors(exception);
 		}
-		if (1 == isSaveRequestLogs)
+		if (1 == Integer.valueOf(isSaveRequestLogs))
 			saveSysApiLogToDB(apiLog);
 
 		return response;
@@ -223,7 +223,7 @@ public class SysApiLogAspect extends AbstractQueueRunnable<SysApiLog> {
 			e.printStackTrace();
 			detailMsg = e.getMessage();
 		}
-		logger.error(resultMsg);
+		log.error(resultMsg);
 
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("resultCode", resultCode);

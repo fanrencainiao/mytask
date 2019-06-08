@@ -7,11 +7,13 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.qjxs.common.utils.StringUtil;
 import com.qjxs.common.vo.KSession;
 import com.qjxs.utils.KSessionUtil;
 
@@ -19,7 +21,7 @@ import com.qjxs.utils.KSessionUtil;
 
 public abstract class AbstractController {
 	
-	protected Logger logger=LoggerFactory.getLogger("controller");
+	protected Log log=LogFactory.getLog("api.log");
 
 	
 	public HttpServletRequest getRequest() {
@@ -84,10 +86,10 @@ public abstract class AbstractController {
 		return requestIp;
 	}
 	
-//	protected ObjectId parse(String s) {
-//		return StringUtil.isEmpty(s) ? null : new ObjectId(s);
-//	}
-//	
+	protected ObjectId parse(String s) {
+		return StringUtil.isEmpty(s) ? null : new ObjectId(s);
+	}
+	
 	protected void referer(HttpServletResponse response,String redirectUrl,int isSession){
 		String retUrl =null;
 		if(1==isSession)

@@ -90,11 +90,11 @@ public class AuthorizationFilter implements Filter {
 
 		// 如果访问的是控制台或资源目录
 		if (requestUri.startsWith("/console") || requestUri.endsWith(".js") || requestUri.endsWith(".html")
-				|| requestUri.endsWith(".css") || requestUri.endsWith(".png")) {
+				|| requestUri.endsWith(".css") || requestUri.endsWith(".png")|| requestUri.startsWith("/user")) {
 			Object obj = request.getSession().getAttribute(LoginSign.LOGIN_USER_KEY);
 			// 用户已登录或访问资源目录或访问登录页面
-			if (null != obj || requestUri.startsWith("/pages") || requestUri.startsWith("/console/login")
-					|| requestUri.startsWith("/console")) {
+			if (null == obj || requestUri.startsWith("/pages") || requestUri.startsWith("/console/login")
+					|| requestUri.startsWith("/console")|| requestUri.startsWith("/user")) {
 				arg2.doFilter(arg0, arg1);
 				return;
 			} else

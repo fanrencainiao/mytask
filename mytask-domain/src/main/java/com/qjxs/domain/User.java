@@ -1,9 +1,17 @@
 package com.qjxs.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +20,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_user")
 @Data
-public class User {
+@JsonIgnoreProperties(value={"hibernateLazyInitializer", "handler","roles"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
+public class User implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	@GeneratedValue(generator = "system-uuid")
@@ -31,15 +45,10 @@ public class User {
 	private Integer state;
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)    
 	@JoinTable(name = "T_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))   
+	@JsonIgnore
+	@NotFound(action = NotFoundAction.IGNORE)
 	private List<Role> roles;
 	
-	public List<String> getRoleName() {
-		List<Role> roles = getRoles();
-		List<String> roleName = new ArrayList<String>();
-		for (Role role : roles)
-			roleName.add(role.getRoleName());
 
-		return roleName;
-	}
 
 }

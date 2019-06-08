@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.connector.ClientAbortException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -22,8 +22,7 @@ import com.qjxs.common.utils.ResponseUtil;
 
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
-
-	private Logger logger=LoggerFactory.getLogger(ExceptionHandlerAdvice.class);
+	protected Log log=LogFactory.getLog(ExceptionHandlerAdvice.class);
 	
 	@ExceptionHandler(value = { Exception.class, RuntimeException.class })
 	public void handleErrors(HttpServletRequest request,
@@ -33,7 +32,7 @@ public class ExceptionHandlerAdvice {
 		int resultCode = 1020101;
 		String resultMsg = "接口内部异常";
 		String detailMsg = "";
-		logger.info(request.getRequestURI() + "错误：");
+		log.info(request.getRequestURI() + "错误：");
 		if (e instanceof MissingServletRequestParameterException
 				|| e instanceof BindException) {
 			resultCode = 1010101;
@@ -47,13 +46,13 @@ public class ExceptionHandlerAdvice {
 			resultMsg="====> ClientAbortException";
 			resultCode=-1;
 		}else if(e instanceof EOFException){
-			logger.info("====》 拦截    EOFException ");
+			log.info("====》 拦截    EOFException ");
 			detailMsg = e.getMessage();
 		}else {
 			e.printStackTrace();
 			detailMsg = e.getMessage();
 		}
-		logger.info(resultMsg);
+		log.info(resultMsg);
 
 		Map<String, Object> map = Maps.newHashMap();
 		map.put("resultCode", resultCode);

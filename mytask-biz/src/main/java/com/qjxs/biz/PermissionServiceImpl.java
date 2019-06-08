@@ -2,11 +2,11 @@ package com.qjxs.biz;
 
 import com.google.common.collect.Lists;
 import com.qjxs.common.jpapage.PageSpringHelp;
-import com.qjxs.domain.QUser;
-import com.qjxs.domain.User;
-import com.qjxs.domain.qry.UserQry;
-import com.qjxs.repository.UserRepository;
-import com.qjxs.service.UserService;
+import com.qjxs.domain.QPermission;
+import com.qjxs.domain.Permission;
+import com.qjxs.domain.qry.PermissionQry;
+import com.qjxs.repository.PermissionRepository;
+import com.qjxs.service.PermissionService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
@@ -21,21 +21,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class PermissionServiceImpl implements PermissionService {
 	
-	private static final Log apilog=LogFactory.getLog("api.user.log");
+	Log apilog=LogFactory.getLog("api.permission.log");
 
 	@Autowired
-	private UserRepository repository;
+	private PermissionRepository repository;
 
 	@Override
-	public User save(User user) {
-		apilog.debug(user);
-		return repository.save(user);
+	public Permission save(Permission bean) {
+		return repository.save(bean);
 	}
 
 	@Override
-	public void delete(UserQry qry) {
+	public void delete(PermissionQry qry) {
 		repository.delete(qry);
 	}
 
@@ -50,9 +49,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findById(String id) {
+	public Permission findById(String id) {
 
-		Optional<User> o = repository.findById(id);
+		Optional<Permission> o = repository.findById(id);
 		if (o.isPresent())
 			return o.get();
 		else
@@ -60,28 +59,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> query(UserQry qry) {
-
+	public List<Permission> query(PermissionQry qry) {
 		return Lists.newArrayList(repository.findAll(this.getPredicate(qry)));
 	}
 
 	@Override
-	public Page<User> queryPage(UserQry qry) {
+	public Page<Permission> queryPage(PermissionQry qry) {
 		Predicate p = this.getPredicate(qry);
 		Pageable pageable = PageSpringHelp.convert(qry.getPrama());
 		return repository.findAll(p, pageable);
 	}
 
 	@Override
-	public Long count(UserQry qry) {
+	public Long count(PermissionQry qry) {
 		return repository.count(this.getPredicate(qry));
 	}
 
-	private Predicate getPredicate(UserQry qry) {
+	private Predicate getPredicate(PermissionQry qry) {
 		BooleanBuilder p = new BooleanBuilder();
-		if (qry.getUserName() != null)
-			p.and(QUser.user.userName.eq(qry.getUserName()));
-
+		if (qry.getPerName() != null)
+			p.and(QPermission.permission.perName.eq(qry.getPerName()));
 		return p;
 	}
 

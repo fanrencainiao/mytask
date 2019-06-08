@@ -29,7 +29,7 @@
 
     </appender>
 
-    <appender name="userpaifile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="paifile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
@@ -43,8 +43,8 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="api.user.log" level="debug">
-        <appender-ref ref="userpaifile"/>
+    <logger name="api.log" level="debug">
+        <appender-ref ref="paifile"/>
     </logger>
 
     <root level="info">

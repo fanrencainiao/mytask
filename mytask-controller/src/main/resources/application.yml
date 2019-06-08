@@ -14,6 +14,17 @@ spring:
     hibernate:
       ddl-auto: update
       use-new-id-generator-mappings: true
+    properties:
+      hibernate:
+        envers:
+          audit_table_suffix: _aud
+        jdbc:
+          batch_size: 10
+        order_inserts: true
+        order_updates: true
+        generate_statistics: false
+
+            
   redis:
     host: 127.0.0.1
     port: 6379
@@ -28,6 +39,14 @@ spring:
           seconds: 10000
         max-idle: 200
         min-idle: 1800000
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/admin
+      host: 127.0.0.1
+      username: 
+      password: 
+      database: mytask
+      port: 27017 
         
         
         
@@ -37,9 +56,10 @@ authorizationfilter:
   requestUriList[1]: /user/login
 myTask:
   apiKey: task0408 
-  isAuth: 0 #是否检验接口 0不检验，1检验
-  isSaveRequestLogs: 0 #是否保存请求日志 0否，1是
-        
+  #是否检验接口 0不检验，1检验
+  isAuth: 0 
+  #是否保存请求日志 0否，1是
+  isSaveRequestLogs: 0 
      
         
         

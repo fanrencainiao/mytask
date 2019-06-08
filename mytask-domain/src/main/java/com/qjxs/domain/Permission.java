@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_permission")
 @Data
-public class Permission {
+public class Permission  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
