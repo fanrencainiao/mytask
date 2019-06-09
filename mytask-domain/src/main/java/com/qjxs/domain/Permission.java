@@ -2,6 +2,8 @@ package com.qjxs.domain;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.qjxs.common.vo.BaseBean;
+
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "t_permission")
 @Data
-public class Permission  implements Serializable{
+public class Permission extends BaseBean{
 
 	/**
 	 * 

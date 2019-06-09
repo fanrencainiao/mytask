@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.qjxs.common.vo.BaseBean;
 
 import lombok.Data;
 
@@ -19,7 +20,7 @@ import javax.persistence.*;
 @Data
 @JsonIgnoreProperties(value={"hibernateLazyInitializer", "handler","users"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
-public class Role implements Serializable{
+public class Role extends BaseBean{
 
 	/**
 	 * 
