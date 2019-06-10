@@ -13,7 +13,7 @@ import lombok.Data;
 public class Test{
 	@Id
 	private ObjectId tid;
-	@Indexed(unique=true)
+	@Indexed
 	private String tname;
 
 }
