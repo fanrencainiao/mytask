@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
+/**
+ *  mongdb连接配置
+ * @author cf
+ *
+ */
 @Configuration
 @ConditionalOnClass(Mongo.class)
 public class MorphiaFactory {

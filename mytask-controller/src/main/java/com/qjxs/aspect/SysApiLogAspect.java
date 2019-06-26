@@ -36,6 +36,11 @@ import com.qjxs.common.utils.ReqUtil;
 import com.qjxs.common.utils.Result;
 import com.qjxs.common.vo.SysApiLog;
 
+/**
+ * 切面输出接口访问情况，并根据配置是否保存日志
+ * @author cf
+ *
+ */
 @Aspect
 @Order(1)
 @Component
