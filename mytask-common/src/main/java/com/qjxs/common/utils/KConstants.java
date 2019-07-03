@@ -9,8 +9,6 @@ import java.util.Set;
 /**
  * 常量
  * 
- * @author luorc
- * 
  */
 public class KConstants {
 	

@@ -3,7 +3,6 @@ package com.qjxs.aspect;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author lidaye
  *
  */
 public abstract class BaseRunnable implements Runnable{

@@ -4,8 +4,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
- * @author lidaye
- * 2017年4月4日 上午9:23:12
  */
 public abstract class AbstractQueueRunnable<T> extends BaseRunnable {
 	
