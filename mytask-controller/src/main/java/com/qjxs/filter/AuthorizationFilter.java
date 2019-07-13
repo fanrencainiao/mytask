@@ -89,12 +89,11 @@ public class AuthorizationFilter implements Filter {
 		// DEBUG**************************************************DEBUG
 
 		// 如果访问的是控制台或资源目录
-		if (requestUri.startsWith("/console") || requestUri.endsWith(".js") || requestUri.endsWith(".html")
-				|| requestUri.endsWith(".css") || requestUri.endsWith(".png")|| requestUri.startsWith("/user")) {
+		if (requestUri.startsWith("/console") || requestUri.endsWith(".js")||requestUri.startsWith("/toPage") || requestUri.endsWith(".html")
+				|| requestUri.endsWith(".css") || requestUri.endsWith(".jpg")|| requestUri.startsWith("/user")) {
 			Object obj = request.getSession().getAttribute(LoginSign.LOGIN_USER_KEY);
 			// 用户已登录或访问资源目录或访问登录页面
-			if (null == obj || requestUri.startsWith("/pages") || requestUri.startsWith("/console/login")
-					|| requestUri.startsWith("/console")|| requestUri.startsWith("/user")) {
+			if (null == obj) {
 				arg2.doFilter(arg0, arg1);
 				return;
 			} else
@@ -160,7 +159,7 @@ public class AuthorizationFilter implements Filter {
 		return userId;
 	}
 
-	private static final String template = "{\"resultCode\":%1$s,\"resultMsg\":\"%2$s\"}";
+	private static final String template = "{\"code\":%1$s,\"msg\":\"%2$s\"}";
 
 	private static void renderByErrorKey(ServletResponse response, int tipsKey, String tipsValue) {
 
