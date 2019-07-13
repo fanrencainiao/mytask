@@ -77,8 +77,8 @@ public class AuthorizationFilter implements Filter {
 		// boolean falg=StringUtils.isNotBlank(secret)&&0<time;
 		String requestUri = request.getRequestURI();
 		//
-		// if("/favicon.ico".equals(requestUri))
-		// return;
+		 if("/favicon.ico".equals(requestUri))
+		 return;
 
 		// DEBUG**************************************************DEBUG
 		StringBuffer sb = new StringBuffer();

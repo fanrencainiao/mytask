@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -15,12 +16,16 @@ import com.qjxs.common.utils.KConstants;
 import com.qjxs.common.utils.StringUtil;
 import com.qjxs.common.vo.KSession;
 import com.qjxs.domain.User;
-
+@Component
 public final class KSessionUtil {
 	private static Log log = LogFactory.getFactory().getInstance(KSessionUtil.class);
 
-	@Autowired
 	private static RedisUtil redisUtil;
+
+	@Autowired
+	public KSessionUtil(RedisUtil redisUtil) {
+		KSessionUtil.redisUtil = redisUtil;
+	}
 
 	/**
 	 * 根据用户Id获取access_token
