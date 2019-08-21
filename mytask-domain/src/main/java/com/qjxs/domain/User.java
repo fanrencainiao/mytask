@@ -44,7 +44,7 @@ public class User extends BaseBean{
 	private Integer sex;
 	private Integer userType;
 	private Integer state;
-	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)    
+	@ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)    
 	@JoinTable(name = "T_USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))   
 	@JsonIgnore
 	@NotFound(action = NotFoundAction.IGNORE)

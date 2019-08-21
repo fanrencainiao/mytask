@@ -81,6 +81,8 @@ public class UserServiceImpl implements UserService {
 		BooleanBuilder p = new BooleanBuilder();
 		if (qry.getUserName() != null)
 			p.and(QUser.user.userName.eq(qry.getUserName()));
+		if (qry.getUserName() != null)
+			p.and(QUser.user.passWorld.eq(qry.getPassWorld()));
 
 		return p;
 	}

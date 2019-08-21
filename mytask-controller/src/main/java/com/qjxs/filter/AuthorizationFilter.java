@@ -14,19 +14,20 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.google.common.collect.Maps;
 import com.qjxs.common.login.LoginSign;
 import com.qjxs.common.utils.AuthServiceUtils;
-import com.qjxs.utils.KSessionUtil;
 import com.qjxs.common.utils.ReqUtil;
 import com.qjxs.common.utils.ResponseUtil;
+import com.qjxs.common.utils.StringUtil;
+import com.qjxs.domain.User;
+import com.qjxs.utils.KSessionUtil;
+
 
 @WebFilter(filterName = "authorizationfilter", urlPatterns = { "/*" }, initParams = {
 		@WebInitParam(name = "enable", value = "true") })
@@ -36,7 +37,7 @@ public class AuthorizationFilter implements Filter {
 	@Autowired
 	@Qualifier(value = "afp")
 	private AuthorizationFilterProperties afp;
-	private Logger logger = LoggerFactory.getLogger(AuthorizationFilter.class);
+	private Log logger = LogFactory.getLog(AuthorizationFilter.class);
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
@@ -60,18 +61,19 @@ public class AuthorizationFilter implements Filter {
 			}
 		}
 
-		// if (!enable) {
-		// arg2.doFilter(arg0, arg1);
-		// return;
-		// }
+//		 if (!enable) {
+//		 arg2.doFilter(arg0, arg1);
+//		 return;
+//		 }
 
 		HttpServletRequest request = (HttpServletRequest) arg0;
 		HttpServletResponse response = (HttpServletResponse) arg1;
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
-		String accessToken = request.getParameter("access_token");
-		long time = NumberUtils.toLong(request.getParameter("time"), 0);
+		String accessToken = request.getHeader("access_token");
+//		long time = NumberUtils.toLong(request.getParameter("time"), 0);
+		long time = 0;
 		String secret = request.getParameter("secret");
 		// //是否检验接口
 		// boolean falg=StringUtils.isNotBlank(secret)&&0<time;
@@ -85,19 +87,20 @@ public class AuthorizationFilter implements Filter {
 		sb.append(request.getMethod()).append(" 请求：" + request.getRequestURI());
 
 		logger.info(sb.toString());
-
 		// DEBUG**************************************************DEBUG
-
+		
 		// 如果访问的是控制台或资源目录
-		if (requestUri.startsWith("/console") || requestUri.endsWith(".js")||requestUri.startsWith("/toPage") || requestUri.endsWith(".html")
-				|| requestUri.endsWith(".css") || requestUri.endsWith(".jpg")|| requestUri.startsWith("/user")) {
-			Object obj = request.getSession().getAttribute(LoginSign.LOGIN_USER_KEY);
+		if (requestUri.startsWith("/console")||requestUri.startsWith("/static")||requestUri.startsWith("/templates")||requestUri.startsWith("/v2") ||requestUri.startsWith("/swagger-resources")|| requestUri.startsWith("/toPage") || requestUri.endsWith(".js") || requestUri.endsWith(".html")
+				|| requestUri.endsWith(".css") || requestUri.endsWith(".jpg")|| requestUri.endsWith(".png")||requestUri.endsWith(".json")||requestUri.endsWith(".woff")||requestUri.endsWith(".ttf")|| requestUri.startsWith("/test")) {
+			User obj =(User) request.getSession().getAttribute(LoginSign.LOGIN_USER_KEY);
 			// 用户已登录或访问资源目录或访问登录页面
-			if (null == obj) {
+			System.out.println(obj);
+			if ((null != obj&&obj.getId()!=null)||requestUri.startsWith("/console/logout")||requestUri.startsWith("/console/login")||requestUri.startsWith("/templates/console/login.html")||requestUri.startsWith("/static")) {
 				arg2.doFilter(arg0, arg1);
 				return;
 			} else
-				response.sendRedirect("/console/login");
+				response.sendRedirect("/templates/console/login.html");
+			
 		} else {
 			if (requestUri.equals("/getImgCode")) {
 				arg2.doFilter(arg0, arg1);
@@ -107,16 +110,16 @@ public class AuthorizationFilter implements Filter {
 			// 需要登录
 			if (isNeedLogin(request.getRequestURI())) {
 				// 请求令牌是否包含
-				if (StringUtils.isEmpty(accessToken)) {
+				if (StringUtil.isEmpty(accessToken)) {
 					logger.info("不包含请求令牌");
-					int tipsKey = 1030101;
+					int tipsKey = 20006;
 					renderByErrorKey(response, tipsKey, "不包含请求令牌");
 				} else {
 					String userId = getUserId(accessToken);
 					// 请求令牌是否有效
 					if (null == userId) {
 						logger.info("请求令牌无效或已过期...");
-						int tipsKey = 1030102;
+						int tipsKey = 20007;
 						renderByErrorKey(response, tipsKey, "请求令牌无效或已过期...");
 					} else {
 
@@ -125,7 +128,7 @@ public class AuthorizationFilter implements Filter {
 							return;
 						}
 
-						ReqUtil.setLoginedUserId(Integer.parseInt(userId));
+						ReqUtil.setLoginedUserId(Integer.valueOf(userId));
 						arg2.doFilter(arg0, arg1);
 						return;
 					}
