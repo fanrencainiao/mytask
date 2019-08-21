@@ -1,10 +1,8 @@
-package cn.xyz.commons.utils;
+package com.qjxs.common.utils.Thread;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import cn.xyz.commons.support.Callback;
 
 
 
