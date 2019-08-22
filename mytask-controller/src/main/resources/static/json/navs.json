@@ -8,21 +8,21 @@
 			"systemConfig": true,
 			"children": [
 				{
-					"title": "服务器配置",
+					"title": "用户管理",
 					"icon": "&#xe857;",
-					"href": "/pages/console/system_config.html",
+					"href": "system_user.html",
 					"spread": false
 				},
 				{
-					"title": "客户端配置",
+					"title": "角色管理",
 					"icon": "&#xe7ae;",
-					"href": "/pages/console/clientConfig.html",
+					"href": "/pages/console/system_role.html",
 					"spread": false
 				},
 				{
-					"title":"集群配置",
+					"title":"菜单管理",
 					"icon":"&#xe656;",
-					"href":"/pages/console/clusterConfig.html",
+					"href":"/pages/console/system_menu.html",
 					"spread":false
 				}
 			]

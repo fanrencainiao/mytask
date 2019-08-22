@@ -185,7 +185,7 @@ layui.define(["element","jquery"],function(exports){
 	Tab.prototype.tabAdd = function(_this){
 
 		if(currentMenu==_this.attr("data-url")){ //判断是否重复打开同一页面
-			layer.msg("当前页面已打开，请勿重复操作",{'icon':2});
+//			layer.msg("当前页面已打开，请勿重复操作",{'icon':2});
 			return;
 		}
 
