@@ -1,6 +1,7 @@
 package com.qjxs.biz;
 
 import com.google.common.collect.Lists;
+import com.qjxs.common.ex.ServiceException;
 import com.qjxs.common.jpapage.PageSpringHelp;
 import com.qjxs.domain.QUser;
 import com.qjxs.domain.User;
